@@ -21,3 +21,21 @@ for i in range(N):
 total_cost = 0
 for i in range(N):
     total_cost += employees[i][1] * taxis[result[i][1]-1][1]
+
+print(*result)
+
+def spell_out_number(number):
+    words = ['рубль', 'рубля', 'рублей']
+    remainder = number % 100
+    if 11 <= remainder <= 19:
+        return f"{number} {words[2]}"
+    else:
+        remainder = remainder % 10
+        if remainder == 1:
+            return f"{number} {words[0]}"
+        elif remainder in [2, 3, 4]:
+            return f"{number} {words[1]}"
+        else:
+            return f"{number} {words[2]}"
+
+print(spell_out_number(total_cost))
