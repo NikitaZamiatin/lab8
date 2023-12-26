@@ -1,31 +1,35 @@
+import itertools
+
 N = int(input("Введите натуральное число N от 1 до 1000, равное количеству сотрудников компании: "))
+if N < 1:
+    print("Число не может быть меньше одного!")
+    exit()
 
-distances = list(map(int, input("Введите N положительных целых чисел, задающих расстояния в километрах от работы до домов сотрудников компании: ").split()))
+distances = list(map(int, input("Введите N положительных целых чисел, задающих расстояния в километрах от работы до домов каждого сотрудника компании: ").split()))
 
-tariffs = list(map(int, input("Далее еще N положительных целых чисел чисел — тарифы в рублях за проезд одного километра в такси: ").split()))
+tariffs = list(map(int, input("Далее еще N положительных целых чисел чисел — тарифы в рублях за проезд одного километра каждого из вызванных такси: ").split()))
 
-employees = [(i+1, distances[i]) for i in range(N)]
-employees.sort(key=lambda x: x[1])
+n = len(distances) 
+m = len(tariffs)  
 
-taxis = [(i+1, tariffs[i]) for i in range(N)]
-taxis.sort(key=lambda x: x[1])
 
-result = [(employee[0], 1) for employee in employees]
+permutations = list(itertools.permutations(range(1, n + 1))) # все возможные перестановки
 
-for i in range(N):
-    min_taxi = result[i][1]
-    for j in range(i+1, N):
-        if result[j][1] < min_taxi:
-            result[j] = (result[j][0], min_taxi)
-    
-total_cost = 0
-for i in range(N):
-    total_cost += employees[i][1] * taxis[result[i][1]-1][1]
+total_cost = float('inf')  # минимальная стоимость
+result_fin = None
 
-result_fin = []
+for route in permutations:
+    cost = 0
 
-for i in range(len(result)):
-    result_fin.append(result[i][0])
+    for i in range(n): # стоимость для текущего маршрута
+        driver = route[i] % m
+        distance = distances[i]
+        tariff = tariffs[driver]
+        cost += distance * tariff
+
+    if cost < total_cost:
+        total_cost = cost
+        result_fin = route
 
 print(*result_fin)
 
